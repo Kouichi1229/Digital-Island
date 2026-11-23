@@ -1,0 +1,504 @@
+{
+  "character": "Lumi",
+  "version": 1,
+  "padding": 8,
+  "alpha_threshold_for_detection": 8,
+  "frames": {
+    "walk-down/frame-00": {
+      "file": "assets/creatures/lumi/frames/walk-down/frame-00.png",
+      "index": 0,
+      "source": "assets/creatures/lumi/raw/walk-down.png",
+      "source_bbox_inclusive": [
+        64,
+        96,
+        959,
+        1007
+      ],
+      "crop_rect": [
+        56,
+        88,
+        968,
+        1016
+      ],
+      "crop_size": [
+        912,
+        928
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-down/frame-01": {
+      "file": "assets/creatures/lumi/frames/walk-down/frame-01.png",
+      "index": 1,
+      "source": "assets/creatures/lumi/raw/walk-down.png",
+      "source_bbox_inclusive": [
+        1088,
+        16,
+        1983,
+        959
+      ],
+      "crop_rect": [
+        1080,
+        8,
+        1992,
+        968
+      ],
+      "crop_size": [
+        912,
+        960
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-down/frame-02": {
+      "file": "assets/creatures/lumi/frames/walk-down/frame-02.png",
+      "index": 2,
+      "source": "assets/creatures/lumi/raw/walk-down.png",
+      "source_bbox_inclusive": [
+        2112,
+        96,
+        3007,
+        1007
+      ],
+      "crop_rect": [
+        2104,
+        88,
+        3016,
+        1016
+      ],
+      "crop_size": [
+        912,
+        928
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-down/frame-03": {
+      "file": "assets/creatures/lumi/frames/walk-down/frame-03.png",
+      "index": 3,
+      "source": "assets/creatures/lumi/raw/walk-down.png",
+      "source_bbox_inclusive": [
+        3136,
+        16,
+        4031,
+        991
+      ],
+      "crop_rect": [
+        3128,
+        8,
+        4040,
+        1000
+      ],
+      "crop_size": [
+        912,
+        992
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-left/frame-00": {
+      "file": "assets/creatures/lumi/frames/walk-left/frame-00.png",
+      "index": 0,
+      "source": "assets/creatures/lumi/raw/walk-left.png",
+      "source_bbox_inclusive": [
+        48,
+        55,
+        1028,
+        999
+      ],
+      "crop_rect": [
+        40,
+        47,
+        1037,
+        1008
+      ],
+      "crop_size": [
+        997,
+        961
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-left/frame-01": {
+      "file": "assets/creatures/lumi/frames/walk-left/frame-01.png",
+      "index": 1,
+      "source": "assets/creatures/lumi/raw/walk-left.png",
+      "source_bbox_inclusive": [
+        1071,
+        40,
+        2050,
+        1015
+      ],
+      "crop_rect": [
+        1063,
+        32,
+        2059,
+        1024
+      ],
+      "crop_size": [
+        996,
+        992
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-left/frame-02": {
+      "file": "assets/creatures/lumi/frames/walk-left/frame-02.png",
+      "index": 2,
+      "source": "assets/creatures/lumi/raw/walk-left.png",
+      "source_bbox_inclusive": [
+        2096,
+        104,
+        3074,
+        983
+      ],
+      "crop_rect": [
+        2088,
+        96,
+        3083,
+        992
+      ],
+      "crop_size": [
+        995,
+        896
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-left/frame-03": {
+      "file": "assets/creatures/lumi/frames/walk-left/frame-03.png",
+      "index": 3,
+      "source": "assets/creatures/lumi/raw/walk-left.png",
+      "source_bbox_inclusive": [
+        3120,
+        88,
+        4095,
+        1016
+      ],
+      "crop_rect": [
+        3112,
+        80,
+        4096,
+        1024
+      ],
+      "crop_size": [
+        984,
+        944
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 0,
+        "bottom": 7
+      }
+    },
+    "walk-right/frame-00": {
+      "file": "assets/creatures/lumi/frames/walk-right/frame-00.png",
+      "index": 0,
+      "source": "assets/creatures/lumi/raw/walk-right.png",
+      "source_bbox_inclusive": [
+        0,
+        452,
+        669,
+        1127
+      ],
+      "crop_rect": [
+        0,
+        444,
+        678,
+        1136
+      ],
+      "crop_size": [
+        678,
+        692
+      ],
+      "bbox_offset_in_crop": [
+        0,
+        8
+      ],
+      "padding": {
+        "left": 0,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-right/frame-01": {
+      "file": "assets/creatures/lumi/frames/walk-right/frame-01.png",
+      "index": 1,
+      "source": "assets/creatures/lumi/raw/walk-right.png",
+      "source_bbox_inclusive": [
+        681,
+        429,
+        1345,
+        1128
+      ],
+      "crop_rect": [
+        673,
+        421,
+        1354,
+        1137
+      ],
+      "crop_size": [
+        681,
+        716
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-right/frame-02": {
+      "file": "assets/creatures/lumi/frames/walk-right/frame-02.png",
+      "index": 2,
+      "source": "assets/creatures/lumi/raw/walk-right.png",
+      "source_bbox_inclusive": [
+        1364,
+        484,
+        2033,
+        1104
+      ],
+      "crop_rect": [
+        1356,
+        476,
+        2042,
+        1113
+      ],
+      "crop_size": [
+        686,
+        637
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-right/frame-03": {
+      "file": "assets/creatures/lumi/frames/walk-right/frame-03.png",
+      "index": 3,
+      "source": "assets/creatures/lumi/raw/walk-right.png",
+      "source_bbox_inclusive": [
+        2047,
+        437,
+        2712,
+        1104
+      ],
+      "crop_rect": [
+        2039,
+        429,
+        2721,
+        1113
+      ],
+      "crop_size": [
+        682,
+        684
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-up/frame-00": {
+      "file": "assets/creatures/lumi/frames/walk-up/frame-00.png",
+      "index": 0,
+      "source": "assets/creatures/lumi/raw/walk-up.png",
+      "source_bbox_inclusive": [
+        42,
+        352,
+        639,
+        1279
+      ],
+      "crop_rect": [
+        34,
+        344,
+        648,
+        1288
+      ],
+      "crop_size": [
+        614,
+        944
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-up/frame-01": {
+      "file": "assets/creatures/lumi/frames/walk-up/frame-01.png",
+      "index": 1,
+      "source": "assets/creatures/lumi/raw/walk-up.png",
+      "source_bbox_inclusive": [
+        725,
+        319,
+        1322,
+        1290
+      ],
+      "crop_rect": [
+        717,
+        311,
+        1331,
+        1299
+      ],
+      "crop_size": [
+        614,
+        988
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-up/frame-02": {
+      "file": "assets/creatures/lumi/frames/walk-up/frame-02.png",
+      "index": 2,
+      "source": "assets/creatures/lumi/raw/walk-up.png",
+      "source_bbox_inclusive": [
+        1408,
+        351,
+        2004,
+        1279
+      ],
+      "crop_rect": [
+        1400,
+        343,
+        2013,
+        1288
+      ],
+      "crop_size": [
+        613,
+        945
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    },
+    "walk-up/frame-03": {
+      "file": "assets/creatures/lumi/frames/walk-up/frame-03.png",
+      "index": 3,
+      "source": "assets/creatures/lumi/raw/walk-up.png",
+      "source_bbox_inclusive": [
+        2089,
+        319,
+        2687,
+        1290
+      ],
+      "crop_rect": [
+        2081,
+        311,
+        2696,
+        1299
+      ],
+      "crop_size": [
+        615,
+        988
+      ],
+      "bbox_offset_in_crop": [
+        8,
+        8
+      ],
+      "padding": {
+        "left": 8,
+        "top": 8,
+        "right": 8,
+        "bottom": 8
+      }
+    }
+  }
+}
