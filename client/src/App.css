@@ -28,12 +28,23 @@
 
 .game-section {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1600px;
+}
+
+.game-layout {
   display: flex;
-  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.game-map {
+  flex: 1;
+  min-width: 0;
 }
 
 #game-container {
+  position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
   max-height: calc(100vh - 140px);
@@ -49,4 +60,94 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+
+.dialogue-panel {
+  flex: 0 0 34%;
+  max-width: 420px;
+  min-width: 260px;
+}
+
+.dialogue-panel.is-collapsed {
+  flex-basis: 48px;
+  min-width: 48px;
+  max-width: 48px;
+}
+
+@media (max-width: 700px) {
+  .app {
+    padding: 12px 6px;
+  }
+
+  .app-header {
+    margin-bottom: 12px;
+  }
+
+  .app-header h1 {
+    font-size: 24px;
+  }
+
+  .game-layout {
+    flex-direction: column;
+  }
+
+  .game-map {
+    width: 100%;
+  }
+
+  .dialogue-panel {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    flex: none;
+  }
+
+  .dialogue-panel.is-collapsed {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    flex-basis: auto;
+  }
+}
+
+.game-map {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.game-time {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 8px 16px;
+  margin-top: 10px;
+  box-sizing: border-box;
+  background: #172238;
+  border: 2px solid #718ba9;
+  color: #e8f0f5;
+  font-family: "Fusion Pixel", sans-serif;
+}
+
+.game-time__label {
+  color: #9bb5d3;
+  font-size: 13px;
+}
+
+.game-time__clock {
+  font-size: 22px;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-time__period {
+  font-size: 14px;
+  color: #e9d8aa;
+}
+
+@media (max-width: 700px) {
+  .game-time {
+    min-height: 48px;
+  }
 }

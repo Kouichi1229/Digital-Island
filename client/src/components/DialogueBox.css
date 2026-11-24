@@ -1,0 +1,241 @@
+.dialogue-panel {
+  font-family: "Fusion Pixel", monospace;
+}
+
+.dialogue-box {
+  width: 100%;
+  padding: 5px;
+  background: #9bb5d3;
+  clip-path: polygon(
+    0 12px,
+    4px 12px,
+    4px 4px,
+    12px 4px,
+    12px 0,
+    calc(100% - 12px) 0,
+    calc(100% - 12px) 4px,
+    calc(100% - 4px) 4px,
+    calc(100% - 4px) 12px,
+    100% 12px,
+    100% calc(100% - 12px),
+    calc(100% - 4px) calc(100% - 12px),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 12px) calc(100% - 4px),
+    calc(100% - 12px) 100%,
+    12px 100%,
+    12px calc(100% - 4px),
+    4px calc(100% - 4px),
+    4px calc(100% - 12px),
+    0 calc(100% - 12px)
+  );
+}
+
+.dialogue-box__inner {
+  position: relative;
+  min-height: 220px;
+  padding: 15px 16px 10px;
+  color: #e5edf7;
+  background: #172238;
+  clip-path: polygon(
+    0 9px,
+    4px 9px,
+    4px 4px,
+    9px 4px,
+    9px 0,
+    calc(100% - 9px) 0,
+    calc(100% - 9px) 4px,
+    calc(100% - 4px) 4px,
+    calc(100% - 4px) 9px,
+    100% 9px,
+    100% calc(100% - 9px),
+    calc(100% - 4px) calc(100% - 9px),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 9px) calc(100% - 4px),
+    calc(100% - 9px) 100%,
+    9px 100%,
+    9px calc(100% - 4px),
+    4px calc(100% - 4px),
+    4px calc(100% - 9px),
+    0 calc(100% - 9px)
+  );
+}
+
+.dialogue-box__inner::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 2px solid #718ba9;
+  pointer-events: none;
+  clip-path: polygon(
+    0 6px,
+    3px 6px,
+    3px 3px,
+    6px 3px,
+    6px 0,
+    calc(100% - 6px) 0,
+    calc(100% - 6px) 3px,
+    calc(100% - 3px) 3px,
+    calc(100% - 3px) 6px,
+    100% 6px,
+    100% calc(100% - 6px),
+    calc(100% - 3px) calc(100% - 6px),
+    calc(100% - 3px) calc(100% - 3px),
+    calc(100% - 6px) calc(100% - 3px),
+    calc(100% - 6px) 100%,
+    6px 100%,
+    6px calc(100% - 3px),
+    3px calc(100% - 3px),
+    3px calc(100% - 6px),
+    0 calc(100% - 6px)
+  );
+}
+
+.dialogue-box__header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-height: 29px;
+  padding-bottom: 9px;
+  border-bottom: 2px solid #526c8a;
+}
+
+.dialogue-box__name {
+  padding: 4px 13px;
+  color: #ffffff;
+  background: #314c70;
+  border: 2px solid #9bb5d3;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.dialogue-box__record {
+  color: #b8cbe3;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.dialogue-box__content {
+  position: relative;
+  z-index: 1;
+  padding: 13px 3px 4px;
+}
+
+.dialogue-box__content h2 {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: 21px;
+  font-weight: normal;
+  line-height: 1.5;
+}
+
+.dialogue-box__content p {
+  margin: 0;
+  color: #d6e2f0;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.dialogue-box__footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 17px;
+  padding-right: 3px;
+}
+
+.dialogue-box__hint {
+  width: 12px;
+  height: 9px;
+  background: #b8cbe3;
+  clip-path: polygon(0 0, 33% 0, 33% 33%, 66% 33%, 66% 0, 100% 0, 50% 100%);
+}
+
+.dialogue-toggle {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2px solid #9bb5d3;
+  background: #314c70;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dialogue-toggle:hover {
+  background: #49688f;
+}
+
+.dialogue-toggle--collapsed {
+  width: 48px;
+  min-height: 120px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  writing-mode: vertical-rl;
+  clip-path: polygon(
+    0 10px,
+    4px 10px,
+    4px 4px,
+    10px 4px,
+    10px 0,
+    calc(100% - 10px) 0,
+    calc(100% - 10px) 4px,
+    calc(100% - 4px) 4px,
+    calc(100% - 4px) 10px,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 4px) calc(100% - 10px),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 10px) calc(100% - 4px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    10px calc(100% - 4px),
+    4px calc(100% - 4px),
+    4px calc(100% - 10px),
+    0 calc(100% - 10px)
+  );
+}
+
+@media (max-width: 700px) {
+  .dialogue-box__inner {
+    min-height: 150px;
+  }
+
+  .dialogue-box__content h2 {
+    font-size: 17px;
+  }
+
+  .dialogue-box__content p {
+    font-size: 14px;
+  }
+
+  .dialogue-box__name {
+    font-size: 14px;
+  }
+
+  .dialogue-box__record {
+    font-size: 12px;
+  }
+
+  .dialogue-toggle--collapsed {
+    width: 100%;
+    min-height: 42px;
+    height: 42px;
+    writing-mode: horizontal-tb;
+    flex-direction: row;
+  }
+}
