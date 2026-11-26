@@ -1,5 +1,29 @@
 import Phaser from "phaser";
 import { gameClock } from "../GameClock";
+import {
+  perceiveEnvironment,
+  type EnvironmentSnapshot,
+} from "../EnvironmentPerception";
+import { recordEnvironment } from "../EnvironmentRecorder";
+import { recordCollision } from "../EnvironmentRecorder";
+import { recordUpdateDiagnostic } from "../DiagnosticsRecorder";
+
+export type LumiDirection = "up" | "down" | "left" | "right";
+
+export type LumiSnapshot = {
+  x: number;
+  y: number;
+  direction: LumiDirection;
+  isMoving: boolean;
+  gameTime: string;
+  environment: EnvironmentSnapshot;
+};
+
+export type LumiActionExecution = {
+  actionId: string;
+  action: "move_up" | "move_down" | "move_left" | "move_right" | "stop";
+  durationSeconds: number;
+};
 
 const DIRECTIONS = ["down", "up", "left", "right"] as const;
 
@@ -125,35 +149,31 @@ function getLighting(totalMinutes: number) {
 
 export class IslandScene extends Phaser.Scene {
   private lightOverlay!: Phaser.GameObjects.Graphics;
+
   private lumi!: Phaser.Physics.Arcade.Sprite;
+
+  private mapLayers: (
+    | Phaser.Tilemaps.TilemapLayer
+    | Phaser.Tilemaps.TilemapGPULayer
+  )[] = [];
+
+  private lumiDirection: LumiDirection = "down";
+
+  private lastSnapshotTime = 0;
+  private lastEnvironmentRecordTime = 0;
+
+  private recordedCollisionTiles = new Set<string>();
+
+  private activeAction: LumiActionExecution | null = null;
+
+  private actionElapsedMs = 0;
+
+  private lastActionUpdateTime: number | null = null;
+
+  private visibilityHandler?: () => void;
+
   constructor() {
     super("IslandScene");
-  }
-
-  private updateLumiMovement() {
-    const keyboard = this.input.keyboard;
-
-    if (!keyboard || !this.lumi) {
-      return;
-    }
-
-    const keys = keyboard.createCursorKeys();
-
-    const speed = 100;
-    let velocityX = 0;
-    let velocityY = 0;
-
-    if (keys.left.isDown) velocityX = -speed;
-    if (keys.right.isDown) velocityX = speed;
-    if (keys.up.isDown) velocityY = -speed;
-    if (keys.down.isDown) velocityY = speed;
-
-    if (velocityX !== 0 && velocityY !== 0) {
-      velocityX *= Math.SQRT1_2;
-      velocityY *= Math.SQRT1_2;
-    }
-
-    this.lumi.setVelocity(velocityX, velocityY);
   }
 
   preload() {
@@ -211,7 +231,7 @@ export class IslandScene extends Phaser.Scene {
       return tileset;
     });
 
-    const collisionLayers = LAYERS.map((layerName) => {
+    this.mapLayers = LAYERS.map((layerName) => {
       const layer = map.createLayer(layerName, tilesets, 0, 0);
 
       if (!layer) {
@@ -223,6 +243,14 @@ export class IslandScene extends Phaser.Scene {
       return layer;
     });
 
+    console.log(
+      "Map Layer Types:",
+      this.mapLayers.map((layer) => ({
+        name: layer.layer.name,
+        type: layer.constructor.name,
+      })),
+    );
+
     for (const direction of DIRECTIONS) {
       this.anims.create({
         key: `lumi-walk-${direction}`,
@@ -233,6 +261,7 @@ export class IslandScene extends Phaser.Scene {
         repeat: -1,
       });
     }
+
     const meatFarm = this.add.image(528, 480, "meat-farm-mature");
 
     meatFarm.setOrigin(0.5, 1);
@@ -249,39 +278,277 @@ export class IslandScene extends Phaser.Scene {
 
     const body = this.lumi.body as Phaser.Physics.Arcade.Body;
 
+    body.onCollide = true;
+
     body.setSize(32, 20);
     body.setOffset(24, 58);
     body.setCollideWorldBounds(true);
 
-    for (const layer of collisionLayers) {
+    for (const layer of this.mapLayers) {
       this.physics.add.collider(this.lumi, layer);
     }
 
+    this.physics.world.on(
+      "tilecollide",
+      (
+        gameObject: Phaser.GameObjects.GameObject,
+        tile: Phaser.Tilemaps.Tile,
+        _body: Phaser.Physics.Arcade.Body,
+      ) => {
+        if (gameObject !== this.lumi) {
+          return;
+        }
+
+        const collisionKey = `${tile.layer.name}:${tile.x}:${tile.y}:${tile.index}`;
+
+        if (this.recordedCollisionTiles.has(collisionKey)) {
+          return;
+        }
+
+        this.recordedCollisionTiles.add(collisionKey);
+
+        recordCollision({
+          timestamp: new Date().toISOString(),
+          gameTime: gameClock.getSnapshot().formattedTime,
+          lumiX: this.lumi.x,
+          lumiY: this.lumi.y,
+          targetType: "tile",
+          layer: tile.layer.name,
+          tileIndex: tile.index,
+          targetX: tile.getCenterX(),
+          targetY: tile.getCenterY(),
+        });
+      },
+    );
+
     this.physics.add.collider(this.lumi, meatFarm);
 
-    this.lumi.play("lumi-walk-down");
-
-    this.input.keyboard?.addKeys({
-      up: Phaser.Input.Keyboard.KeyCodes.UP,
-      down: Phaser.Input.Keyboard.KeyCodes.DOWN,
-      left: Phaser.Input.Keyboard.KeyCodes.LEFT,
-      right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
-    });
+    // 初始保持靜止，不播放走路動畫。
+    this.lumi.setTexture("lumi-down-0");
 
     console.log("DigitalIsland V2 map loaded!");
     console.log("Lumi initialized!");
     console.log("Map dimensions:", map.width, "x", map.height);
+
     this.lightOverlay = this.add.graphics();
     this.lightOverlay.setScrollFactor(0);
     this.lightOverlay.setDepth(1000);
 
+    // 背景分頁時暫停移動與行動計時。
+    this.visibilityHandler = () => {
+      if (document.visibilityState === "hidden") {
+        this.lumi.setVelocity(0, 0);
+        this.lastActionUpdateTime = null;
+        return;
+      }
+
+      if (this.activeAction) {
+        this.lastActionUpdateTime = performance.now();
+        this.applyActiveActionMovement();
+      }
+    };
+
+    document.addEventListener("visibilitychange", this.visibilityHandler);
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      if (this.visibilityHandler) {
+        document.removeEventListener(
+          "visibilitychange",
+          this.visibilityHandler,
+        );
+      }
+
+      this.lumi.setVelocity(0, 0);
+      this.activeAction = null;
+      this.lastActionUpdateTime = null;
+    });
+
     this.updateLighting();
+    // 通知 GameCanvas：Lumi 與遊戲環境已完成初始化。
+    this.events.emit("lumi-ready");
+  }
+
+  /**
+   * 由 GameCanvas 呼叫，讓 Phaser 執行 Backend 核准的行動。
+   */
+  startLumiAction(action: LumiActionExecution): void {
+    if (this.activeAction !== null) {
+      throw new Error("Lumi is already executing an action");
+    }
+
+    if (
+      typeof action.actionId !== "string" ||
+      action.actionId.length === 0 ||
+      !Number.isFinite(action.durationSeconds) ||
+      action.durationSeconds < 180 ||
+      action.durationSeconds > 300
+    ) {
+      throw new Error("Invalid Lumi action execution data");
+    }
+
+    const validActions = [
+      "move_up",
+      "move_down",
+      "move_left",
+      "move_right",
+      "stop",
+    ];
+
+    if (!validActions.includes(action.action)) {
+      throw new Error("Invalid Lumi action type");
+    }
+
+    this.activeAction = action;
+    this.actionElapsedMs = 0;
+
+    this.lastActionUpdateTime =
+      document.visibilityState === "visible" ? performance.now() : null;
+
+    this.applyActiveActionMovement();
+  }
+
+  /**
+   * 根據目前行動設定 Lumi 的速度與動畫。
+   */
+  private applyActiveActionMovement(): void {
+    if (!this.activeAction || !this.lumi) {
+      return;
+    }
+
+    if (document.visibilityState === "hidden") {
+      this.lumi.setVelocity(0, 0);
+      return;
+    }
+
+    const speed = 100;
+
+    switch (this.activeAction.action) {
+      case "move_up":
+        this.lumiDirection = "up";
+        this.lumi.setVelocity(0, -speed);
+        break;
+
+      case "move_down":
+        this.lumiDirection = "down";
+        this.lumi.setVelocity(0, speed);
+        break;
+
+      case "move_left":
+        this.lumiDirection = "left";
+        this.lumi.setVelocity(-speed, 0);
+        break;
+
+      case "move_right":
+        this.lumiDirection = "right";
+        this.lumi.setVelocity(speed, 0);
+        break;
+
+      case "stop":
+        this.lumi.setVelocity(0, 0);
+        this.lumi.anims.stop();
+        this.lumi.setTexture(`lumi-${this.lumiDirection}-0`);
+        return;
+    }
+
+    this.lumi.play(`lumi-walk-${this.lumiDirection}`, true);
+  }
+
+  /**
+   * 行動時間結束後停止 Lumi，並回報 actionId。
+   */
+  private finishLumiAction(): void {
+    if (!this.activeAction) {
+      return;
+    }
+
+    const actionId = this.activeAction.actionId;
+
+    this.lumi.setVelocity(0, 0);
+    this.lumi.anims.stop();
+    this.lumi.setTexture(`lumi-${this.lumiDirection}-0`);
+
+    this.activeAction = null;
+    this.actionElapsedMs = 0;
+    this.lastActionUpdateTime = null;
+
+    this.events.emit("lumi-action-completed", actionId);
+  }
+
+  getLumiSnapshot(): LumiSnapshot | null {
+    if (!this.lumi || !this.lumi.body) {
+      return null;
+    }
+
+    const body = this.lumi.body as Phaser.Physics.Arcade.Body;
+    const gameTime = gameClock.getSnapshot();
+
+    const environment = perceiveEnvironment(
+      this.mapLayers,
+      this.lumi.x,
+      this.lumi.y,
+    );
+
+    const now = this.time.now;
+
+    if (now - this.lastEnvironmentRecordTime >= 1000) {
+      this.lastEnvironmentRecordTime = now;
+
+      recordEnvironment(
+        {
+          x: this.lumi.x,
+          y: this.lumi.y,
+          direction: this.lumiDirection,
+          isMoving: body.velocity.lengthSq() > 0,
+          gameTime: gameTime.formattedTime,
+        },
+        environment,
+      );
+    }
+
+    return {
+      x: this.lumi.x,
+      y: this.lumi.y,
+      direction: this.lumiDirection,
+      isMoving: body.velocity.lengthSq() > 0,
+      gameTime: gameTime.formattedTime,
+      environment,
+    };
   }
 
   update() {
+    recordUpdateDiagnostic();
+
     gameClock.advanceTo();
     this.updateLighting();
-    this.updateLumiMovement();
+
+    // 只計算瀏覽器前景期間實際經過的時間。
+    if (this.activeAction && document.visibilityState === "visible") {
+      const now = performance.now();
+
+      if (this.lastActionUpdateTime !== null) {
+        const elapsed = Math.max(0, now - this.lastActionUpdateTime);
+
+        this.actionElapsedMs += elapsed;
+      }
+
+      this.lastActionUpdateTime = now;
+
+      if (this.actionElapsedMs >= this.activeAction.durationSeconds * 1000) {
+        this.finishLumiAction();
+      }
+    }
+
+    const now = this.time.now;
+
+    if (now - this.lastSnapshotTime >= 200) {
+      this.lastSnapshotTime = now;
+
+      const snapshot = this.getLumiSnapshot();
+
+      if (snapshot) {
+        this.events.emit("lumi-snapshot", snapshot);
+      }
+    }
   }
 
   private updateLighting() {
