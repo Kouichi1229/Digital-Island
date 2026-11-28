@@ -1,12 +1,16 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import { loadLumiConfig } from "./lumi/config/lumi-config";
 import {
   completeLumiAction,
   getLumiControllerState,
   recoverLumiController,
   requestLumiAction,
 } from "./lumi/lumi-controller";
+
+// Validate Lumi queue configuration before creating or starting the server.
+loadLumiConfig();
 
 const app = express();
 const PORT = 3000;
